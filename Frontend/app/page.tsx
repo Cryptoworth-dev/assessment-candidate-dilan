@@ -1,7 +1,24 @@
-import Image from "next/image";
+import PageContainer from "@/components/layout/PageContainer"
+import ExpenseStats from "@/components/dashboard/ExpenseStats"
+
 
 export default function Home() {
   return (
-    <div />
-  );
+    <PageContainer>
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            Dashboard
+          </h1>
+
+          <p className="mt-2 text-muted-foreground">
+            Track your spending, review expenses, and monitor analytics.
+          </p>
+        </div>
+        <div className="mt-8">
+          <ExpenseStats />
+        </div>
+      </section>
+    </PageContainer>
+  )
 }
