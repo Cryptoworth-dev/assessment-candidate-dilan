@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-
+use Illuminate\Http\Request;
 use App\Models\Expense;
 use App\Repositories\Contracts\ExpenseRepositoryInterface;
 
@@ -18,9 +18,9 @@ class ExpenseService
 
      //Get all expenses
 
-    public function getExpenses()
+    public function getExpenses(Request $request)
     {
-        return $this->repository->all();
+        return $this->repository->all($request);
     }
 
     //Create new expense

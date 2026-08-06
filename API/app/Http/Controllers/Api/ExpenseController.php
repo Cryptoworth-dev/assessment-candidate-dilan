@@ -7,6 +7,7 @@ use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Services\ExpenseService;
+use Illuminate\Http\Request;
 
 use Illuminate\Http\JsonResponse;
 
@@ -20,18 +21,20 @@ class ExpenseController extends Controller
     {
     }
 //All
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $expenses = $this->service->getExpenses();
+        $expenses = $this->service->getExpenses($request);
 
         return response()->json([
-
             'success' => true,
-            'data' => ExpenseResource::collection(
-                $expenses
-            )
+            'data' => ExpenseResource::collection($expenses),
+            'pagination' => [
+                'current_page' => $expenses->currentPage(),
+                'last_page' => $expenses->lastPage(),
+                'per_page' => $expenses->perPage(),
+                'total' => $expenses->total(),
+            ]
         ]);
-
     }
 //store
     public function store(
