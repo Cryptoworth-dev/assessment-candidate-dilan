@@ -14,15 +14,22 @@ class SummaryController extends Controller
     {
     }
 
+
     public function index()
     {
         return response()->json([
-
-            'success'=>true,
-            'data'=>$this->service->getSummary()
+            'success' => true,
+            'data' => $this->service->getSummary()
         ]);
-
     }
 
+
+    public function monthlySpending()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->service->getMonthlySpending()
+        ]);
+    }
 
 }

@@ -17,5 +17,5 @@ Route::prefix('expenses')
         Route::delete('/{id}',[ExpenseController::class,'destroy']);
     });
 
-Route::get('/summary',[SummaryController::class,'index']
-);
+Route::get('/summary',[SummaryController::class,'index']);
+Route::get('/summary/monthly-spending', [SummaryController::class, 'monthlySpending']);

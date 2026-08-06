@@ -30,5 +30,7 @@ interface ExpenseRepositoryInterface
 
     //delete an expense
     public function delete(int $id): bool;
+    
+    public function getMonthlySpending();
 
 }
