@@ -1,5 +1,6 @@
 import PageContainer from "@/components/layout/PageContainer"
 import ExpenseStats from "@/components/dashboard/ExpenseStats"
+import RecentExpenses from "@/components/dashboard/RecentExpenses"
 
 
 export default function Home() {
@@ -17,6 +18,10 @@ export default function Home() {
         </div>
         <div className="mt-8">
           <ExpenseStats />
+        </div>
+        {/*Table Section */}
+        <div className="mt-15">
+          <RecentExpenses />
         </div>
       </section>
     </PageContainer>
