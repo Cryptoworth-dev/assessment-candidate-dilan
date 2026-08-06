@@ -39,3 +39,23 @@ export async function getExpenses() {
 
   return response.json()
 }
+
+//summery
+
+export async function getSummary() {
+
+  const response = await fetch(`${API_URL}/summary`, {
+    method: "GET",
+    headers: {
+      "Accept": "application/json",
+    },
+  })
+
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch summary")
+  }
+
+
+  return response.json()
+}

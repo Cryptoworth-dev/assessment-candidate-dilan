@@ -10,9 +10,9 @@ export default function StatCard({
   amount,
 }: StatCardProps) {
   return (
-    <Card className="rounded-2xl">
+    <Card className="rounded-2xl bg-[#004ac6] text-white border-none shadow-md">
       <CardHeader>
-        <CardTitle className="text-sm text-muted-foreground">
+        <CardTitle className="text-sm font-medium text-slate-300">
           {title}
         </CardTitle>
       </CardHeader>

@@ -18,25 +18,22 @@ class SummaryService
 
 
     public function getSummary(): array
-    {
-        $expenses = $this->repository->all();
-        $total = $expenses->sum('amount');
+{
+    $expenses = $this->repository->getAllExpenses();
 
-        $categoryTotals = $expenses
-            ->groupBy('category')
-            ->map(function($items){
+    $total = $expenses->sum('amount');
 
-                return $items->sum('amount');
+    $categoryTotals = $expenses
+        ->groupBy('category')
+        ->map(function($items){
+            return $items->sum('amount');
+        });
 
-            });
-        return [
-
-            'total' => $total,
-            'categories' => $categoryTotals
-
-        ];
-
-    }
+    return [
+        'total' => $total,
+        'categories' => $categoryTotals
+    ];
+}
 
 
 }

@@ -11,7 +11,6 @@ use App\Repositories\Contracts\ExpenseRepositoryInterface;
 class ExpenseRepository implements ExpenseRepositoryInterface
 {
 
-
     public function all(Request $request)
     {
         $query = Expense::query();
@@ -49,6 +48,10 @@ class ExpenseRepository implements ExpenseRepositoryInterface
             ->paginate($pageSize);
     }
 
+    public function getAllExpenses()
+    {
+        return Expense::all();
+    }
 
     public function find(int $id): ?Expense
     {

@@ -13,6 +13,9 @@ interface ExpenseRepositoryInterface
   //get all expenses
     public function all(Request $request);
 
+    //get all expenses (unfiltered)
+    public function getAllExpenses();
+
    //find expense by id
     public function find(int $id): ?Expense;
 
