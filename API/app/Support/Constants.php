@@ -13,6 +13,12 @@ class Constants
         'Rent',
         'Shopping',
         'Entertainment',
+        'Utilities',
+        'Health',
+        'Education',
+        'Business',
+        'Finance',
+        'Personal',
         'Other'
 
     ];

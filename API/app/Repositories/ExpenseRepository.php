@@ -45,7 +45,7 @@ class ExpenseRepository implements ExpenseRepositoryInterface
         $pageSize = $request->input('pageSize', 10);
 
         return $query
-            ->orderBy('date', 'desc')
+            ->orderBy('expense_date', 'desc')
             ->paginate($pageSize);
     }
 

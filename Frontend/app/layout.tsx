@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
+import QueryProvider from "@/src/providers/query-provider"
+
 
 const inter = Inter({
   variable: "--font-sans",
@@ -21,11 +23,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
 
       <body className="min-h-full flex flex-col">
+         <QueryProvider>
 
         <Navbar />
 
         {children}
-
+    </QueryProvider>
       </body>
 
     </html>

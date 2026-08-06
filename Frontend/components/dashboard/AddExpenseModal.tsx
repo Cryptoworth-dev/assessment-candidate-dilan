@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { useState, type ReactElement } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { expenseSchema, ExpenseFormValues } from "@/src/validations/expense"
@@ -23,29 +23,62 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select"
-import { Plus, Coffee, Car, ShoppingCart, Laptop, Tag, LucideIcon } from "lucide-react"
+import { Plus, Coffee, Car, ShoppingCart, Laptop, Tag, LucideIcon, User, Wallet, Briefcase, GraduationCap, HeartPulse, Zap, Gamepad2, Home } from "lucide-react"
 
 interface AddExpenseModalProps {
   onExpenseAdded?: (newExpense: ExpenseItem) => void
-  trigger?: ReactNode
+  trigger?: ReactElement
 }
 
-const getCategoryIcon = (category: string): LucideIcon => {
-  switch (category.toLowerCase()) {
-    case "food & dining": return Coffee
-    case "transportation": return Car
-    case "groceries": return ShoppingCart
-    case "electronics": return Laptop
-    default: return Tag
-  }
-}
+// const getCategoryIcon = (category: string): LucideIcon => {
+//   switch (category.toLowerCase()) {
+//     case "food":
+//       return Coffee
+
+//     case "transport":
+//       return Car
+
+//     case "rent":
+//       return Home
+
+//     case "shopping":
+//       return ShoppingCart
+
+//     case "entertainment":
+//       return Gamepad2
+
+//     case "utilities":
+//       return Zap
+
+//     case "health":
+//       return HeartPulse
+
+//     case "education":
+//       return GraduationCap
+
+//     case "business":
+//       return Briefcase
+
+//     case "finance":
+//       return Wallet
+
+//     case "personal":
+//       return User
+
+//     case "other":
+//       return Tag
+
+//     default:
+//       return Tag
+//   }
+// }
 export interface ExpenseItem {
   id: string
   description: string
   category: string
   date: string
   amount: string
-  icon: LucideIcon
+  // icon: LucideIcon
 }
 
 export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseModalProps) {
@@ -81,7 +114,7 @@ export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseM
           category: data.category,
           date: data.expense_date,
           amount: `-LKR${Number(data.amount).toFixed(2)}`,
-          icon: getCategoryIcon(data.category),
+          //icon: getCategoryIcon(data.category),
           id: ""
       }
 
@@ -93,18 +126,16 @@ export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseM
     }
   }
 
+  const triggerElement = trigger ?? (
+    <Button className="gap-2 rounded-xl">
+      <Plus className="w-4 h-4" />
+      Add Expense
+    </Button>
+  )
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {trigger ? (
-        <DialogTrigger>{trigger}</DialogTrigger>
-      ) : (
-        <DialogTrigger>
-          <Button className="gap-2 rounded-xl">
-            <Plus className="w-4 h-4" />
-            Add Expense
-          </Button>
-        </DialogTrigger>
-      )}
+      <DialogTrigger render={triggerElement} />
       <DialogContent className="sm:max-w-[425px] rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">Add New Expense</DialogTitle>
@@ -162,11 +193,19 @@ export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseM
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Food & Dining">Food & Dining</SelectItem>
-                <SelectItem value="Transportation">Transportation</SelectItem>
-                <SelectItem value="Groceries">Groceries</SelectItem>
-                <SelectItem value="Electronics">Electronics</SelectItem>
-              </SelectContent>
+                <SelectItem value="Food">Food</SelectItem>
+                <SelectItem value="Transport">Transport</SelectItem>
+                <SelectItem value="Rent">Rent</SelectItem>
+                <SelectItem value="Shopping">Shopping</SelectItem>
+                <SelectItem value="Entertainment">Entertainment</SelectItem>
+                <SelectItem value="Utilities">Utilities</SelectItem>
+                <SelectItem value="Health">Health</SelectItem>
+                <SelectItem value="Education">Education</SelectItem>
+                <SelectItem value="Business">Business</SelectItem>
+                <SelectItem value="Finance">Finance</SelectItem>
+                <SelectItem value="Personal">Personal</SelectItem>
+                <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
             </Select>
             {errors.category && (
               <p className="text-xs text-red-500">{errors.category.message}</p>

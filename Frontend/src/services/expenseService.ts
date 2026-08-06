@@ -24,3 +24,18 @@ export async function addExpense(data: ExpenseFormValues) {
 
   return response.json()
 }
+//get
+export async function getExpenses() {
+  const response = await fetch(`${API_URL}/expenses`, {
+    method: "GET",
+    headers: {
+      "Accept": "application/json",
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch expenses")
+  }
+
+  return response.json()
+}
