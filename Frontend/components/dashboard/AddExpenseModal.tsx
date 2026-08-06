@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { expenseSchema, ExpenseFormValues } from "@/src/validations/expense"
 import { addExpense } from "@/src/services/expenseService"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { 
   Dialog, 
   DialogContent, 
@@ -84,7 +85,22 @@ export interface ExpenseItem {
 export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseModalProps) {
   const [open, setOpen] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  //auto refresh the recent expenses list after adding a new expense
+  const queryClient = useQueryClient()
 
+  const mutation = useMutation({
+
+  mutationFn:addExpense,
+
+  onSuccess:()=>{
+
+      queryClient.invalidateQueries({
+          queryKey:["expenses"]
+      })
+
+  }
+
+  })
   const {
     register,
     handleSubmit,
@@ -105,11 +121,9 @@ export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseM
     try {
       setServerError(null)
       // Call Laravel API
-      await addExpense(data)
-
+      await mutation.mutateAsync(data)
       // Format for local UI state update
       const formattedExpense: ExpenseItem = {
-          //id: Math.random().toString(36.substring(2, 9)),
           description: data.description,
           category: data.category,
           date: data.expense_date,
