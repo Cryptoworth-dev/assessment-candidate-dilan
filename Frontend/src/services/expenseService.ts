@@ -40,10 +40,9 @@ export async function getExpenses() {
   return response.json()
 }
 
-//summery
+
 
 export async function getSummary() {
-
   const response = await fetch(`${API_URL}/summary`, {
     method: "GET",
     headers: {
@@ -51,11 +50,37 @@ export async function getSummary() {
     },
   })
 
-
   if (!response.ok) {
     throw new Error("Failed to fetch summary")
   }
 
-
   return response.json()
+}
+
+export async function getMonthlySpending() {
+  const response = await fetch(`${API_URL}/summary/monthly-spending`, {
+    method: "GET",
+    headers: {
+      "Accept": "application/json",
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch monthly spending")
+  }
+
+  return response.json() as Promise<MonthlySpendingResponse>
+}
+
+export type MonthlySpendingItem = {
+  month: string
+  total: number
+}
+
+export type MonthlySpendingResponse = {
+  success: boolean
+  data: {
+    year: number
+    monthly_spending: MonthlySpendingItem[]
+  }
 }

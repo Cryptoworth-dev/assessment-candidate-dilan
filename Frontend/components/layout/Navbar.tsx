@@ -16,10 +16,10 @@ export default function Navbar() {
           <Link href="/" className="text-foreground transition-colors hover:text-primary">
             Dashboard
           </Link>
-          <Link href="#" className="text-foreground transition-colors hover:text-primary">
+          <Link href="/expenses" className="text-foreground transition-colors hover:text-primary">
             Expenses
           </Link>
-          <Link href="#" className="text-foreground transition-colors hover:text-primary">
+          <Link href="/analysis" className="text-foreground transition-colors hover:text-primary">
             Analytics
           </Link>
         </nav>
