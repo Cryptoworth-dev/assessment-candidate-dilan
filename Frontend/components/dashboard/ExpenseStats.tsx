@@ -12,7 +12,6 @@ import { getSummary } from "@/src/services/expenseService"
 //   }
 // ]
 
-
 export default function ExpenseStats() {
    const {
     data,
@@ -27,8 +26,6 @@ export default function ExpenseStats() {
 
   })
 
-
-
   if(isLoading){
 
     return (
@@ -38,9 +35,6 @@ export default function ExpenseStats() {
     )
 
   }
-
-
-
   if(error){
 
     return (
@@ -50,8 +44,6 @@ export default function ExpenseStats() {
     )
 
   }
-
-
 
   const stats = [
 
