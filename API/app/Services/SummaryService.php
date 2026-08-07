@@ -18,22 +18,32 @@ class SummaryService
 
 
     public function getSummary(): array
-{
-    $expenses = $this->repository->getAllExpenses();
+    {
+        $expenses = $this->repository->getAllExpenses();
 
-    $total = $expenses->sum('amount');
+        $total = $expenses->sum('amount');
 
-    $categoryTotals = $expenses
-        ->groupBy('category')
-        ->map(function($items){
-            return $items->sum('amount');
-        });
+        $categoryTotals = $expenses
+            ->groupBy('category')
+            ->map(function ($items) use ($total) {
 
-    return [
-        'total' => $total,
-        'categories' => $categoryTotals
-    ];
-}
+                $amount = $items->sum('amount');
+
+                $percentage = $total > 0
+                    ? round(($amount / $total) * 100, 2)
+                    : 0;
+
+                return [
+                    'amount' => $amount,
+                    'percentage' => $percentage,
+                ];
+            });
+
+        return [
+            'total' => $total,
+            'categories' => $categoryTotals,
+        ];
+    }
 
 public function getMonthlySpending(): array
 {

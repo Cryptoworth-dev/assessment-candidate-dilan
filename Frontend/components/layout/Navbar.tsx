@@ -12,7 +12,7 @@ export default function Navbar() {
         </div>
         </div>
 
-        <nav className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
+        <nav className="flex flex-wrap items-center gap-4 text-sm font-medium text-muted-foreground">
           <Link href="/" className="text-foreground transition-colors hover:text-primary">
             Dashboard
           </Link>

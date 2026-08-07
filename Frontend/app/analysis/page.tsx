@@ -1,38 +1,56 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
+import { useQueries } from "@tanstack/react-query"
 import MonthlySpendingChart from "@/components/analytics/MonthlySpendingChart"
-import { getMonthlySpending, MonthlySpendingItem } from "@/src/services/expenseService"
+import {
+  getMonthlySpending,
+  getSummary,
+  MonthlySpendingItem,
+  SummaryResponse,
+} from "@/src/services/expenseService"
 import PageContainer from "@/components/layout/PageContainer"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function AnalysisPage() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["monthlySpending"],
-    queryFn: getMonthlySpending,
+  const [monthlySpendingQuery, summaryQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["monthlySpending"],
+        queryFn: getMonthlySpending,
+      },
+      {
+        queryKey: ["summary"],
+        queryFn: getSummary,
+      },
+    ],
   })
+
+  const isLoading = monthlySpendingQuery.isLoading || summaryQuery.isLoading
+  const error = monthlySpendingQuery.error || summaryQuery.error
 
   if (isLoading) {
     return (
       <PageContainer>
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <p>Loading monthly spending...</p>
+          <p>Loading analytics...</p>
         </div>
       </PageContainer>
     )
   }
 
-  if (error || !data?.success) {
+  if (error || !monthlySpendingQuery.data?.success || !summaryQuery.data?.success) {
     return (
       <PageContainer>
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <p>Failed to load monthly spending</p>
+          <p>Failed to load analytics data</p>
         </div>
       </PageContainer>
     )
   }
 
-  const monthlySpending: MonthlySpendingItem[] = data.data.monthly_spending
+  const monthlySpending: MonthlySpendingItem[] = monthlySpendingQuery.data.data.monthly_spending
+  const summary: SummaryResponse = summaryQuery.data
+
   return (
     <PageContainer>
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -53,7 +71,7 @@ export default function AnalysisPage() {
           </CardHeader>
 
           <CardContent className="px-2 py-4 sm:px-6 sm:py-6">
-            <MonthlySpendingChart data={monthlySpending} />
+            <MonthlySpendingChart data={monthlySpending} summary={summary} />
           </CardContent>
         </Card>
       </div>

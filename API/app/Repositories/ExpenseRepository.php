@@ -19,7 +19,7 @@ class ExpenseRepository implements ExpenseRepositoryInterface
 
         // Search
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('description', 'like', '%' . $request->search . '%');
         }
 
         // Category Filter
@@ -42,11 +42,24 @@ class ExpenseRepository implements ExpenseRepositoryInterface
             $query->whereDate('date', '<=', $request->to);
         }
 
+        // Sorting
+        $sortBy = $request->input('sortBy', 'expense_date');
+        $sortOrder = strtolower($request->input('sortOrder', 'desc')) === 'asc' ? 'asc' : 'desc';
+
+        if ($sortBy === 'date') {
+            $sortBy = 'expense_date';
+        }
+
+        $allowedSortColumns = ['expense_date', 'amount', 'category', 'description'];
+        if (!in_array($sortBy, $allowedSortColumns)) {
+            $sortBy = 'expense_date';
+        }
+
         // Records per page
         $pageSize = $request->input('pageSize', 10);
 
         return $query
-            ->orderBy('expense_date', 'desc')
+            ->orderBy($sortBy, $sortOrder)
             ->paginate($pageSize);
     }
 

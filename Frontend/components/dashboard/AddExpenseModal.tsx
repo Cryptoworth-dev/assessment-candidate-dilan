@@ -77,7 +77,7 @@ export interface ExpenseItem {
   id: string
   description: string
   category: string
-  date: string
+  expense_date: string
   amount: string
   // icon: LucideIcon
 }
@@ -120,13 +120,13 @@ export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseM
   const onSubmit = async (data: ExpenseFormValues) => {
     try {
       setServerError(null)
-      // Call Laravel API
+      // API
       await mutation.mutateAsync(data)
       // Format for local UI state update
       const formattedExpense: ExpenseItem = {
           description: data.description,
           category: data.category,
-          date: data.expense_date,
+          expense_date: data.expense_date,
           amount: `-LKR${Number(data.amount).toFixed(2)}`,
           //icon: getCategoryIcon(data.category),
           id: ""

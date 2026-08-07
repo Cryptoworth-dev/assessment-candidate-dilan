@@ -62,7 +62,7 @@ export default function RecentExpenses() {
   return (
     <Card className="rounded-2xl">
 
-      <CardHeader className="flex flex-row items-center justify-between pb-4">
+      <CardHeader className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center sm:justify-between">
 
         <CardTitle className="text-lg font-semibold">
           Recent Expenses
