@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Support;
+
+
+class Constants
+{
+
+    public const EXPENSE_CATEGORIES = [
+
+        'Food',
+        'Transport',
+        'Rent',
+        'Shopping',
+        'Entertainment',
+        'Utilities',
+        'Health',
+        'Education',
+        'Business',
+        'Finance',
+        'Personal',
+        'Other'
+
+    ];
+
+}
