@@ -6,9 +6,6 @@ use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\SummaryController;
 use App\Http\Controllers\Api\AuthController;
 
-
-
-
 Route::prefix('expenses')
     ->group(function(){
 
