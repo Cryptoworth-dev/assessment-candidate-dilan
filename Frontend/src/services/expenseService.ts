@@ -1,7 +1,13 @@
 import { ExpenseFormValues } from "@/src/validations/expense"
+import type {
+  ExpenseQueryParams,
+  SummaryResponse,
+  MonthlySpendingResponse,
+} from "@/src/types/expense"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
 
+//add expenses
 export async function addExpense(data: ExpenseFormValues) {
   const response = await fetch(`${API_URL}/expenses/add`, {
     method: "POST",
@@ -24,15 +30,9 @@ export async function addExpense(data: ExpenseFormValues) {
 
   return response.json()
 }
-export type ExpenseQueryParams = {
-  page?: number
-  pageSize?: number
-  search?: string
-  category?: string
-  sortBy?: string
-  sortOrder?: string
-}
 
+
+//get expenses
 export async function getExpenses(params: ExpenseQueryParams = {}) {
   const query = new URLSearchParams()
 
@@ -57,6 +57,7 @@ export async function getExpenses(params: ExpenseQueryParams = {}) {
   return response.json()
 }
 
+//delete expense
 export async function deleteExpense(id: string) {
   const response = await fetch(`${API_URL}/expenses/${id}`, {
     method: "DELETE",
@@ -73,6 +74,7 @@ export async function deleteExpense(id: string) {
   return response.json()
 }
 
+//update expense
 export async function updateExpense(id: string, data: Partial<ExpenseFormValues>) {
   const response = await fetch(`${API_URL}/expenses/${id}`, {
     method: "PUT",
@@ -101,11 +103,9 @@ export type SummaryData = {
   categories: Record<string, CategorySummaryItem>
 }
 
-export type SummaryResponse = {
-  success: boolean
-  data: SummaryData
-}
 
+
+//get summary
 export async function getSummary(): Promise<SummaryResponse> {
   const response = await fetch(`${API_URL}/summary`, {
     method: "GET",
@@ -127,6 +127,7 @@ function extractFilename(disposition: string | null) {
   return match ? decodeURIComponent(match[1]) : null
 }
 
+//export expenses
 export async function exportExpenses(params: ExpenseQueryParams = {}) {
   const query = new URLSearchParams()
 
@@ -156,6 +157,7 @@ export async function exportExpenses(params: ExpenseQueryParams = {}) {
   return { blob, filename }
 }
 
+//get monthly spending
 export async function getMonthlySpending() {
   const response = await fetch(`${API_URL}/summary/monthly-spending`, {
     method: "GET",
@@ -176,10 +178,10 @@ export type MonthlySpendingItem = {
   total: number
 }
 
-export type MonthlySpendingResponse = {
-  success: boolean
-  data: {
-    year: number
-    monthly_spending: MonthlySpendingItem[]
-  }
-}
+// export type MonthlySpendingResponse = {
+//   success: boolean
+//   data: {
+//     year: number
+//     monthly_spending: MonthlySpendingItem[]
+//   }
+// }
