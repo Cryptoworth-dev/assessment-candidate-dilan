@@ -15,7 +15,7 @@ class ExpenseRepository implements ExpenseRepositoryInterface
 
     public function all(Request $request)
     {
-        $query = Expense::query();
+        $query = Expense::where('user_id', auth()->id());
 
         // Search
         if ($request->filled('search')) {
@@ -65,12 +65,14 @@ class ExpenseRepository implements ExpenseRepositoryInterface
 
     public function getAllExpenses()
     {
-        return Expense::all();
+        return Expense::where('user_id', auth()->id())
+            ->get();
     }
 
     public function find(int $id): ?Expense
     {
-        return Expense::find($id);
+        return Expense::where('user_id', auth()->id())
+            ->find($id);
     }
 
 
@@ -82,14 +84,16 @@ class ExpenseRepository implements ExpenseRepositoryInterface
 
     public function update(int $id,array $data): Expense
     {
-        $expense = Expense::findOrFail($id);
+        $expense = Expense::where('user_id', auth()->id())
+            ->findOrFail($id);
         $expense->update($data);
         return $expense->refresh();
     }
    
     public function delete(int $id): bool
     {
-        $expense = Expense::findOrFail($id);
+        $expense = Expense::where('user_id', auth()->id())
+            ->findOrFail($id);
         return $expense->delete();
     }
 
@@ -101,6 +105,7 @@ class ExpenseRepository implements ExpenseRepositoryInterface
                 DB::raw('MONTH(expense_date) as month'),
                 DB::raw('SUM(amount) as total')
             )
+            ->where('user_id', auth()->id())
             ->whereYear('expense_date', $currentYear)
             ->groupBy(
                 DB::raw('MONTH(expense_date)')
@@ -111,81 +116,81 @@ class ExpenseRepository implements ExpenseRepositoryInterface
 //csv report
 
     public function getExpensesForExport(Request $request)
-{
-    $query = Expense::query();
+    {
+        $query = Expense::where('user_id', auth()->id());
 
-    // Search
-    if ($request->filled('search')) {
-        $query->where(
-            'description',
-            'like',
-            '%' . $request->search . '%'
+        // Search
+        if ($request->filled('search')) {
+            $query->where(
+                'description',
+                'like',
+                '%' . $request->search . '%'
+            );
+        }
+
+        // Category Filter
+        if ($request->filled('category')) {
+            $query->where(
+                'category',
+                $request->category
+            );
+        }
+
+        // Payment Method Filter
+        if ($request->filled('payment_method')) {
+            $query->where(
+                'payment_method',
+                $request->payment_method
+            );
+        }
+
+        // Date From
+        if ($request->filled('from')) {
+            $query->whereDate(
+                'expense_date',
+                '>=',
+                $request->from
+            );
+        }
+
+        // Date To
+        if ($request->filled('to')) {
+            $query->whereDate(
+                'expense_date',
+                '<=',
+                $request->to
+            );
+        }
+
+        // Sorting
+        $sortBy = $request->input(
+            'sortBy',
+            'expense_date'
         );
-    }
 
-    // Category Filter
-    if ($request->filled('category')) {
-        $query->where(
+        $sortOrder = strtolower(
+            $request->input('sortOrder', 'desc')
+        ) === 'asc'
+            ? 'asc'
+            : 'desc';
+
+        if ($sortBy === 'date') {
+            $sortBy = 'expense_date';
+        }
+
+        $allowedSortColumns = [
+            'expense_date',
+            'amount',
             'category',
-            $request->category
-        );
+            'description'
+        ];
+
+        if (!in_array($sortBy, $allowedSortColumns)) {
+            $sortBy = 'expense_date';
+        }
+
+        return $query
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
-
-    // Payment Method Filter
-    if ($request->filled('payment_method')) {
-        $query->where(
-            'payment_method',
-            $request->payment_method
-        );
-    }
-
-    // Date From
-    if ($request->filled('from')) {
-        $query->whereDate(
-            'expense_date',
-            '>=',
-            $request->from
-        );
-    }
-
-    // Date To
-    if ($request->filled('to')) {
-        $query->whereDate(
-            'expense_date',
-            '<=',
-            $request->to
-        );
-    }
-
-    // Sorting
-    $sortBy = $request->input(
-        'sortBy',
-        'expense_date'
-    );
-
-    $sortOrder = strtolower(
-        $request->input('sortOrder', 'desc')
-    ) === 'asc'
-        ? 'asc'
-        : 'desc';
-
-    if ($sortBy === 'date') {
-        $sortBy = 'expense_date';
-    }
-
-    $allowedSortColumns = [
-        'expense_date',
-        'amount',
-        'category',
-        'description'
-    ];
-
-    if (!in_array($sortBy, $allowedSortColumns)) {
-        $sortBy = 'expense_date';
-    }
-
-    return $query
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
-}
 }

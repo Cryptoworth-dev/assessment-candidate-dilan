@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Contracts\ExpenseRepositoryInterface;
 use App\Repositories\ExpenseRepository;
+use App\Repositories\Contracts\AuthRepositoryInterface;
+use App\Repositories\AuthRepository;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,7 +20,14 @@ class AppServiceProvider extends ServiceProvider
             ExpenseRepository::class
 
         );
+        
+        $this->app->bind(
+        AuthRepositoryInterface::class,
+        AuthRepository::class
+    );
+    
     }
+    
 
 
     public function boot(): void

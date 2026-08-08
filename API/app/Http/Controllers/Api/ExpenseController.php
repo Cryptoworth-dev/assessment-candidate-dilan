@@ -38,19 +38,21 @@ class ExpenseController extends Controller
         ]);
     }
 //store
-    public function store(
+   public function store(
         StoreExpenseRequest $request
     ): JsonResponse
     {
+        $data = $request->validated();
 
-        $expense = $this->service->createExpense($request->validated());
+        $data['user_id'] = $request->user()->id;
+
+        $expense = $this->service->createExpense($data);
+
         return response()->json([
-
-            'success'=>true,
-            'message'=>'Expense created successfully.',
-            'data'=>new ExpenseResource($expense)
-        ],201);
-
+            'success' => true,
+            'message' => 'Expense created successfully.',
+            'data' => new ExpenseResource($expense)
+        ], 201);
     }
 //show one
     public function show(
