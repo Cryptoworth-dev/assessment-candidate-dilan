@@ -10,6 +10,9 @@ use App\Models\Expense;
 interface ExpenseRepositoryInterface
 {
 
+  // Get expenses for CSV export
+    public function getExpensesForExport(Request $request);
+    
   //get all expenses
     public function all(Request $request);
 

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Services\ExpenseService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use Illuminate\Http\JsonResponse;
 
@@ -98,6 +99,46 @@ class ExpenseController extends Controller
 
         ]);
 
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        $expenses = $this->service->getExpensesForExport($request);
+
+        $fileName = 'expenses_' . now()->format('Y-m-d_H-i-s') . '.csv';
+
+        return response()->streamDownload(function () use ($expenses) {
+
+            $handle = fopen('php://output', 'w');
+
+            // CSV Header
+            fputcsv($handle, [
+                'ID',
+                'Description',
+                'Category',
+                'Expense Date',
+                'Amount',
+                'Payment Method',
+            ]);
+
+            // CSV Rows
+            foreach ($expenses as $expense) {
+                fputcsv($handle, [
+                    $expense->id,
+                    $expense->description,
+                    $expense->category,
+                    $expense->expense_date,
+                    $expense->amount,
+                    $expense->payment_method,
+                ]);
+            }
+
+            fclose($handle);
+
+        }, $fileName, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
     }
 
 

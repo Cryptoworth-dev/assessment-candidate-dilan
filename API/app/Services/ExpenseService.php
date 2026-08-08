@@ -53,5 +53,10 @@ class ExpenseService
     {
         return $this->repository->delete($id);
     }
+    //fetch csv report
+    public function getExpensesForExport(Request $request)
+    {
+        return $this->repository->getExpensesForExport($request);
+    }
 
 }

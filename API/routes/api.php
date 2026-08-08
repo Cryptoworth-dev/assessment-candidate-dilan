@@ -11,6 +11,7 @@ Route::prefix('expenses')
     ->group(function(){
 
         Route::get('/',[ExpenseController::class,'index']);
+        Route::get('/export', [ExpenseController::class, 'export']);
         Route::post('/add',[ExpenseController::class,'store']);
         Route::get('/{id}',[ExpenseController::class,'show']);
         Route::put('/{id}',[ExpenseController::class,'update']);
