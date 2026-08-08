@@ -73,7 +73,23 @@ export async function deleteExpense(id: string) {
   return response.json()
 }
 
+export async function updateExpense(id: string, data: Partial<ExpenseFormValues>) {
+  const response = await fetch(`${API_URL}/expenses/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
 
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ message: "Failed to update expense" }))
+    throw new Error(errorData.message || "Failed to update expense")
+  }
+
+  return response.json()
+}
 
 export type CategorySummaryItem = {
   amount: number
@@ -103,6 +119,41 @@ export async function getSummary(): Promise<SummaryResponse> {
   }
 
   return response.json() as Promise<SummaryResponse>
+}
+
+function extractFilename(disposition: string | null) {
+  if (!disposition) return null
+  const match = /filename\*=UTF-8''([^;\n]+)/i.exec(disposition) || /filename="?([^";\n]+)"?/i.exec(disposition)
+  return match ? decodeURIComponent(match[1]) : null
+}
+
+export async function exportExpenses(params: ExpenseQueryParams = {}) {
+  const query = new URLSearchParams()
+
+  if (params.page !== undefined) query.set("page", String(params.page))
+  if (params.pageSize !== undefined) query.set("pageSize", String(params.pageSize))
+  if (params.search) query.set("search", params.search)
+  if (params.category) query.set("category", params.category)
+  if (params.sortBy) query.set("sortBy", params.sortBy)
+  if (params.sortOrder) query.set("sortOrder", params.sortOrder)
+
+  const url = `${API_URL}/expenses/export?${query.toString()}`
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: "text/csv, application/octet-stream",
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to export expenses")
+  }
+
+  const blob = await response.blob()
+  const filename = extractFilename(response.headers.get("content-disposition")) || "expenses.csv"
+
+  return { blob, filename }
 }
 
 export async function getMonthlySpending() {

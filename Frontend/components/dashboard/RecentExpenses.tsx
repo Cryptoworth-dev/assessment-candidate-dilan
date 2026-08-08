@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+
 import {
   Table,
   TableBody,
@@ -67,17 +69,19 @@ export default function RecentExpenses() {
         <CardTitle className="text-lg font-semibold">
           Recent Expenses
         </CardTitle>
-        <Button
-          variant="ghost"
-          className="text-sm font-medium text-blue-600 hover:text-blue-700 p-0 h-auto"
-        >
-          View All →
-        </Button>
+        <Link href="/expenses">
+          <Button
+            variant="ghost"
+            className="text-sm font-medium text-blue-600 hover:text-blue-700 p-0 h-auto"
+          >
+            View All →
+          </Button>
+        </Link>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
-            <TableRow className="text-muted-foreground text-xs uppercase">
+            <TableRow className="text-muted-foreground text-xs uppercase ">
               <TableHead className="w-[35%]">
                 Description
               </TableHead>

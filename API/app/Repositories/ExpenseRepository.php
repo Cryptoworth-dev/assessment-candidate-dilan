@@ -108,4 +108,84 @@ class ExpenseRepository implements ExpenseRepositoryInterface
             ->orderBy('month')
             ->get();
     }
+//csv report
+
+    public function getExpensesForExport(Request $request)
+{
+    $query = Expense::query();
+
+    // Search
+    if ($request->filled('search')) {
+        $query->where(
+            'description',
+            'like',
+            '%' . $request->search . '%'
+        );
+    }
+
+    // Category Filter
+    if ($request->filled('category')) {
+        $query->where(
+            'category',
+            $request->category
+        );
+    }
+
+    // Payment Method Filter
+    if ($request->filled('payment_method')) {
+        $query->where(
+            'payment_method',
+            $request->payment_method
+        );
+    }
+
+    // Date From
+    if ($request->filled('from')) {
+        $query->whereDate(
+            'expense_date',
+            '>=',
+            $request->from
+        );
+    }
+
+    // Date To
+    if ($request->filled('to')) {
+        $query->whereDate(
+            'expense_date',
+            '<=',
+            $request->to
+        );
+    }
+
+    // Sorting
+    $sortBy = $request->input(
+        'sortBy',
+        'expense_date'
+    );
+
+    $sortOrder = strtolower(
+        $request->input('sortOrder', 'desc')
+    ) === 'asc'
+        ? 'asc'
+        : 'desc';
+
+    if ($sortBy === 'date') {
+        $sortBy = 'expense_date';
+    }
+
+    $allowedSortColumns = [
+        'expense_date',
+        'amount',
+        'category',
+        'description'
+    ];
+
+    if (!in_array($sortBy, $allowedSortColumns)) {
+        $sortBy = 'expense_date';
+    }
+
+    return $query
+        ->orderBy($sortBy, $sortOrder)
+        ->get();
+}
 }

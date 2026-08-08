@@ -5,7 +5,6 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
-  Legend,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -18,38 +17,11 @@ import type {
   MonthlySpendingItem,
   SummaryResponse,
 } from "@/src/services/expenseService"
+import { getCategoryColor } from "@/src/constants/colors"
 
 interface MonthlySpendingChartProps {
   data: MonthlySpendingItem[]
   summary: SummaryResponse
-}
-
-const categoryColors = [
-  "#1d4ed8",
-  "#2563eb",
-  "#0f172a",
-  "#64748b",
-  "#cbd5e1",
-  "#2563eb",
-  "#2563eb",
-  "#d946ef",
-  "#f59e0b",
-  "#10b981",
-  "#f97316",
-  "#8b5cf6",
-  "#22c55e",
-  "#ef4444",
-  "#0ea5e9",
-  "#7c3aed",
-  "#ec4899",
-  "#facc15",
-  "#14b8a6",
-  "#fb7185",
-]
-
-function getCategoryColor(name: string) {
-  const hash = Array.from(name).reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  return categoryColors[Math.abs(hash) % categoryColors.length]
 }
 
 function CategorySummary({ summary }: { summary: SummaryResponse }) {
@@ -96,7 +68,7 @@ function CategorySummary({ summary }: { summary: SummaryResponse }) {
         </div>
 
         <div className="grid gap-3">
-          {categoryData.map((entry, idx) => (
+          {categoryData.map((entry) => (
             <div
               key={entry.name}
               className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-muted/20 px-3 py-3"

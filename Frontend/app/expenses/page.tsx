@@ -6,7 +6,8 @@ import PageContainer from "@/components/layout/PageContainer"
 import AddExpenseForm from "@/components/expenses/AddExpenseForm"
 import ExpenseFilters from "@/components/expenses/ExpenseFilters"
 import ExpenseTable from "@/components/expenses/ExpenseTable"
-import { getExpenses, deleteExpense, ExpenseQueryParams } from "@/src/services/expenseService"
+import { getExpenses, deleteExpense, exportExpenses, ExpenseQueryParams } from "@/src/services/expenseService"
+import { Button } from "@/components/ui/button"
 
 export default function ExpensesPage() {
   const [page, setPage] = useState(1)
@@ -25,6 +26,27 @@ export default function ExpensesPage() {
     category,
     sortBy,
     sortOrder,
+  }
+
+  const [exportLoading, setExportLoading] = useState(false)
+
+  async function handleExportCsv() {
+    try {
+      setExportLoading(true)
+      const { blob, filename } = await exportExpenses(queryParams)
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = filename || "expenses.csv"
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error("Export failed", err)
+    } finally {
+      setExportLoading(false)
+    }
   }
 
   const { data, isLoading, error } = useQuery({
@@ -61,24 +83,34 @@ export default function ExpensesPage() {
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-3xl border bg-card p-6 shadow-sm">
-              <ExpenseFilters
-                search={search}
-                category={category}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                onSearchChange={(value) => {
-                  setSearch(value)
-                  setPage(1)
-                }}
-                onCategoryChange={(value) => {
-                  setCategory(value)
-                  setPage(1)
-                }}
-                onSortByChange={(value) => setSortBy(value)}
-                onSortOrderChange={(value) => setSortOrder(value)}
-              />
-            </div>
+              <div className="rounded-3xl border bg-card p-6 shadow-sm">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <ExpenseFilters
+                      search={search}
+                      category={category}
+                      sortBy={sortBy}
+                      sortOrder={sortOrder}
+                      onSearchChange={(value) => {
+                        setSearch(value)
+                        setPage(1)
+                      }}
+                      onCategoryChange={(value) => {
+                        setCategory(value)
+                        setPage(1)
+                      }}
+                      onSortByChange={(value) => setSortBy(value)}
+                      onSortOrderChange={(value) => setSortOrder(value)}
+                    />
+                  </div>
+
+                  <div className="flex-shrink-0">
+                    <Button onClick={handleExportCsv} className="ml-2" disabled={exportLoading}>
+                      {exportLoading ? "Exporting..." : "Export CSV"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
 
             <ExpenseTable
               expenses={expenses}
