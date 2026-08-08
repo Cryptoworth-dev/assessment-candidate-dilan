@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\SummaryController;
+use App\Http\Controllers\Api\AuthController;
+
 
 
 
@@ -20,3 +22,9 @@ Route::prefix('expenses')
 
 Route::get('/summary',[SummaryController::class,'index']);
 Route::get('/summary/monthly-spending', [SummaryController::class, 'monthlySpending']);
+
+//register
+Route::post('/register', [AuthController::class, 'register']);
+
+//login
+Route::post('/login', [AuthController::class, 'login']);
