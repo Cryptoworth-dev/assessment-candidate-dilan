@@ -36,6 +36,7 @@ const categories = [
 export default function AddExpenseForm() {
   const [serverError, setServerError] = useState<string | null>(null)
   const queryClient = useQueryClient()
+  const today = new Date().toISOString().split("T")[0]
 
   const mutation = useMutation({
     mutationFn: addExpense,
@@ -119,7 +120,7 @@ export default function AddExpenseForm() {
 
           <div className="space-y-2">
             <Label htmlFor="expense_date">Date</Label>
-            <Input id="expense_date" type="date" {...register("expense_date")} />
+            <Input id="expense_date" type="date" max={today} {...register("expense_date")} />
             {errors.expense_date && <p className="text-xs text-red-500">{errors.expense_date.message}</p>}
           </div>
 

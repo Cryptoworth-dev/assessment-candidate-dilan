@@ -85,6 +85,7 @@ export interface ExpenseItem {
 export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseModalProps) {
   const [open, setOpen] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  const today = new Date().toISOString().split("T")[0]
   //auto refresh the recent expenses list after adding a new expense
   const queryClient = useQueryClient()
 
@@ -232,6 +233,7 @@ export default function AddExpenseModal({ onExpenseAdded, trigger }: AddExpenseM
             <Input 
               id="expense_date" 
               type="date" 
+              max={today}
               {...register("expense_date")} 
             />
             {errors.expense_date && (

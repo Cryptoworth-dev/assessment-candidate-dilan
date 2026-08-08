@@ -6,7 +6,17 @@ export const expenseSchema = z.object({
     message: "Amount must be a valid positive number",
   }),
   category: z.string().min(1, "Please select a category"),
-  expense_date: z.string().min(1, "Date is required"), 
+  expense_date: z
+    .string()
+    .min(1, "Date is required")
+    .refine((value) => {
+      const selectedDate = new Date(value)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      return !isNaN(selectedDate.getTime()) && selectedDate <= today
+    }, {
+      message: "Date cannot be in the future",
+    }),
 })
 
 export type ExpenseFormValues = z.infer<typeof expenseSchema>
