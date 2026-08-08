@@ -7,6 +7,12 @@ import type {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
 
+function getToken() {
+  if (typeof document === "undefined") return null
+  const match = document.cookie.match(new RegExp('(^| )token=([^;]+)'))
+  return match ? match[2] : null
+}
+
 //add expenses
 export async function addExpense(data: ExpenseFormValues) {
   const response = await fetch(`${API_URL}/expenses/add`, {
@@ -14,6 +20,7 @@ export async function addExpense(data: ExpenseFormValues) {
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json",
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
     body: JSON.stringify({
       description: data.description,
@@ -47,6 +54,7 @@ export async function getExpenses(params: ExpenseQueryParams = {}) {
     method: "GET",
     headers: {
       "Accept": "application/json",
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
   })
 
@@ -63,6 +71,7 @@ export async function deleteExpense(id: string) {
     method: "DELETE",
     headers: {
       "Accept": "application/json",
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
   })
 
@@ -81,6 +90,7 @@ export async function updateExpense(id: string, data: Partial<ExpenseFormValues>
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json",
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
     body: JSON.stringify(data),
   })
@@ -111,6 +121,7 @@ export async function getSummary(): Promise<SummaryResponse> {
     method: "GET",
     headers: {
       "Accept": "application/json",
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
   })
 
@@ -144,6 +155,7 @@ export async function exportExpenses(params: ExpenseQueryParams = {}) {
     method: "GET",
     headers: {
       Accept: "text/csv, application/octet-stream",
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
   })
 
@@ -163,6 +175,7 @@ export async function getMonthlySpending() {
     method: "GET",
     headers: {
       "Accept": "application/json",
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
   })
 
