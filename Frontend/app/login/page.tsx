@@ -56,6 +56,18 @@ export default function LoginPage() {
           {isSubmitting ? "Signing in..." : "Sign in"}
         </Button>
       </form>
+      <div className="mt-4 text-center text-sm text-muted-foreground">
+        <p>
+          Don't have an account?{' '}
+          <button
+            type="button"
+            onClick={() => router.push('/register')}
+            className="text-primary underline"
+          >
+            Register
+          </button>
+        </p>
+      </div>
     </div>
   )
 }

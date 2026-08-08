@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const router = useRouter()
   const [serverError, setServerError] = useState<string | null>(null)
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterFormValues>({
+  const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: { name: "", email: "", password: "", password_confirmation: "" },
   })
@@ -63,9 +63,28 @@ export default function RegisterPage() {
           {errors.password_confirmation && <p className="text-xs text-red-500">{errors.password_confirmation.message}</p>}
         </div>
 
-        <Button type="submit" disabled={isSubmitting} className="w-full">
-          {isSubmitting ? "Creating account..." : "Create account"}
-        </Button>
+        <div className="flex gap-3">
+          <Button type="submit" disabled={isSubmitting} className="flex-1">
+            {isSubmitting ? "Creating account..." : "Create account"}
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              // Prefill with test data and submit
+              setValue("name", "Dilan", { shouldValidate: true })
+              setValue("email", "dilan@example.com", { shouldValidate: true })
+              setValue("password", "password123", { shouldValidate: true })
+              setValue("password_confirmation", "password123", { shouldValidate: true })
+              // submit programmatically
+              void handleSubmit(async (data) => await onSubmit(data))()
+            }}
+            className="flex-1"
+          >
+            Test REGISTER
+          </Button>
+        </div>
       </form>
     </div>
   )
